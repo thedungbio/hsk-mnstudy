@@ -15,12 +15,12 @@
       "id": 7,
       "created_at": "2026-11-24T01:18:39.443Z",
       "username": "admin_hsk",
-      "password_hash": "$2a$10$pl9dQGIy47gRstHjrw9qcOpq7/i2kwIK3m8aXMQIZEPJ5dZ1YNocm",
+      "password_hash": "$2a$10$tYd8ZPfw/OYHswAjLTMNYOSj.RFoy7ZAZJOAoLAEihdFYIaicQWTS",
       "full_name": "Quản Trị Viên Trưởng",
       "email": "nguyenthhedung2009gmail.com",
       "role": "admin",
       "status": "active",
-      "updated_at": "2026-11-24T06:07:52.249Z"
+      "updated_at": "2026-11-24T06:29:20.654Z"
     },
     {
       "id": 13,
@@ -37,23 +37,23 @@
       "id": 18,
       "created_at": "2026-11-24T02:03:03.795Z",
       "username": "hocsinh",
-      "password_hash": "$2a$10$VmZzFf.80w1b0tiD//c43O458rFBwieRPt5iCSlrgzkIKo.U9Pr9O",
+      "password_hash": "$2a$10$rvf2YGojxi1Vg5FCviCbuuhFtfAgJS3mFwyuQ.a6WuIlkOtgatdoG",
       "full_name": "Học Sinh",
       "email": "linhban300@gmail.com",
       "role": "student",
       "status": "active",
-      "updated_at": "2026-11-24T06:07:52.436Z"
+      "updated_at": "2026-11-24T06:29:20.740Z"
     },
     {
       "id": 19,
       "created_at": "2026-11-24T02:31:03.796Z",
       "username": "giaovien",
-      "password_hash": "$2a$10$BFCBtGXhFWTZ909PwbiDHOqxDVCqFwnztLDq78ayRKr7gB1GFwyjy",
+      "password_hash": "$2a$10$JMR1gybIuBXUpkjGdgMPbemXDLH9U.lmHX5sWjAPtgWpXEgmbzVba",
       "full_name": "giáo viên",
       "email": "anhlaem@gmail.com",
       "role": "teacher",
       "status": "active",
-      "updated_at": "2026-11-24T06:07:52.533Z"
+      "updated_at": "2026-11-24T06:29:20.823Z"
     },
     {
       "id": 20,
@@ -5034,6 +5034,78 @@
       "status": "success",
       "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
       "performed_by": null
+    },
+    {
+      "id": 412,
+      "created_at": "2026-11-24T06:25:51.930Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 413,
+      "created_at": "2026-11-24T06:26:20.862Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 414,
+      "created_at": "2026-11-24T06:26:50.862Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 415,
+      "created_at": "2026-11-24T06:27:20.901Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 416,
+      "created_at": "2026-11-24T06:27:50.846Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 417,
+      "created_at": "2026-11-24T06:28:21.002Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 418,
+      "created_at": "2026-11-24T06:28:51.036Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 419,
+      "created_at": "2026-11-24T06:29:20.823Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
     }
   ],
   "audit_logs": [
@@ -5834,6 +5906,24 @@
       "action": "ADMIN_LOGIN",
       "target": "auth",
       "details": "{\"role\":\"admin\",\"username\":\"admin_hsk\"}",
+      "ip_address": "::1"
+    },
+    {
+      "id": 90,
+      "created_at": "2026-11-24T06:26:57.287Z",
+      "user_id": 1,
+      "action": "ADMIN_LOGIN",
+      "target": "auth",
+      "details": "{\"role\":\"admin\",\"username\":\"admin\"}",
+      "ip_address": "::1"
+    },
+    {
+      "id": 91,
+      "created_at": "2026-11-24T06:27:17.501Z",
+      "user_id": 1,
+      "action": "ADMIN_LOGIN",
+      "target": "auth",
+      "details": "{\"role\":\"admin\",\"username\":\"admin\"}",
       "ip_address": "::1"
     }
   ]
