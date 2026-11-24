@@ -1,0 +1,23 @@
+{
+  "name": "hskmaster-ai-platform",
+  "version": "2.0.0",
+  "description": "Nền tảng học tiếng Trung & Luyện thi HSK thông minh tích hợp AI",
+  "scripts": {
+    "start": "cd server && node server.js",
+    "seed": "cd server && node database/seed.js",
+    "build": "cd client && npm run build",
+    "build:client": "cd client && npm run build",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && node server.js"
+  },
+  "keywords": [
+    "hsk",
+    "chinese-learning",
+    "edtech",
+    "ai",
+    "speech-recognition",
+    "flashcards"
+  ],
+  "author": "Google DeepMind EdTech Agent",
+  "license": "ISC"
+}

@@ -1,0 +1,8 @@
+node_modules
+client/node_modules
+server/node_modules
+server/node_modules_old
+.git
+.DS_Store
+*.log
+scratch

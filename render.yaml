@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: hskmaster-ai
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm --prefix client install && npm --prefix client run build && npm --prefix server install --omit=dev
+    startCommand: node server/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false
