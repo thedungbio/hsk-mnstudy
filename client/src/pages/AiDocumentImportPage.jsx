@@ -87,7 +87,8 @@ export default function AiDocumentImportPage() {
     try {
       const res = await api.confirmImport(previewDocId, {
         target_hsk_level: parseInt(targetHsk, 10),
-        override_duplicates: false
+        override_duplicates: false,
+        structured_json: previewData
       });
       if (res.success) {
         setSuccessMsg(res.message);
@@ -113,7 +114,27 @@ export default function AiDocumentImportPage() {
   const handleRemoveVocabRow = (index) => {
     if (!previewData || !previewData.vocabulary) return;
     const updatedVocab = previewData.vocabulary.filter((_, i) => i !== index);
-    setPreviewData({ ...previewData, vocabulary: updatedVocab });
+    setPreviewData({
+      ...previewData,
+      vocabulary: updatedVocab,
+      summary: {
+        ...previewData.summary,
+        totalVocabularyFound: updatedVocab.length
+      }
+    });
+  };
+
+  const handleRemoveQuestionRow = (index) => {
+    if (!previewData || !previewData.questions) return;
+    const updatedQuestions = previewData.questions.filter((_, i) => i !== index);
+    setPreviewData({
+      ...previewData,
+      questions: updatedQuestions,
+      summary: {
+        ...previewData.summary,
+        totalQuestionsFound: updatedQuestions.length
+      }
+    });
   };
 
   return (
@@ -363,14 +384,25 @@ export default function AiDocumentImportPage() {
           {/* Bảng câu hỏi trắc nghiệm nếu có */}
           {previewData.questions && previewData.questions.length > 0 && (
             <div className="space-y-3">
-              <h4 className="font-bold text-sm text-slate-700 dark:text-slate-300">
-                Danh sách câu hỏi trắc nghiệm trích xuất ({previewData.questions.length} câu)
+              <h4 className="font-bold text-sm text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                <span>Danh sách câu hỏi trắc nghiệm trích xuất ({previewData.questions.length} câu)</span>
+                <span className="text-xs text-slate-400 font-normal">Bấm biểu tượng thùng rác để xóa câu lỗi</span>
               </h4>
               <div className="space-y-2">
                 {previewData.questions.map((q, idx) => (
-                  <div key={idx} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800 text-xs">
-                    <div className="font-bold text-slate-800 dark:text-slate-200">
-                      Câu {idx + 1}: {q.prompt}
+                  <div key={idx} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800 text-xs relative group">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="font-bold text-slate-800 dark:text-slate-200 flex-1">
+                        Câu {idx + 1}: {q.prompt}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveQuestionRow(idx)}
+                        title="Xóa câu hỏi này khỏi danh sách nhập"
+                        className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-100 dark:hover:bg-rose-950/40 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
                       {q.options.map((opt, oIdx) => (

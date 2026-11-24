@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { api, speakChinese } from '../services/api';
 import { 
   BookOpen, CheckCircle, AlertCircle, Volume2, 
-  ChevronDown, ChevronUp, HelpCircle 
+  ChevronDown, ChevronUp, HelpCircle, Edit2, Trash2, 
+  Plus, X, Save, CheckCircle2 
 } from 'lucide-react';
 
 export default function GrammarPage() {
+  const { isAdmin, isTeacher } = useAuth();
   const [grammarList, setGrammarList] = useState([]);
   const [selectedHsk, setSelectedHsk] = useState('1');
   const [loading, setLoading] = useState(true);
@@ -13,7 +16,22 @@ export default function GrammarPage() {
   const [userAnswers, setUserAnswers] = useState({});
   const [showExplanation, setShowExplanation] = useState({});
 
-  useEffect(() => {
+  // Quick Edit & Add modal states
+  const [editingGrammar, setEditingGrammar] = useState(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [modalForm, setModalForm] = useState({
+    title: '',
+    structure: '',
+    explanation: '',
+    example_sentence: '',
+    example_pinyin: '',
+    example_vi: '',
+    hsk_level: 1
+  });
+  const [saving, setSaving] = useState(false);
+  const [feedbackMsg, setFeedbackMsg] = useState('');
+
+  const fetchGrammar = () => {
     setLoading(true);
     api.getGrammar(`?hsk=${selectedHsk}`)
       .then(res => {
@@ -23,6 +41,10 @@ export default function GrammarPage() {
         }
       })
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchGrammar();
   }, [selectedHsk]);
 
   const handleSelectAnswer = (grammarId, qIdx, option) => {
@@ -36,8 +58,98 @@ export default function GrammarPage() {
     setShowExplanation(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
+  // --- QUẢN LÝ / SỬA NHANH & XÓA NGỮ PHÁP ---
+  const handleOpenEdit = (item, e) => {
+    e?.stopPropagation();
+    setEditingGrammar(item);
+    setModalForm({
+      title: item.title || '',
+      structure: item.structure || '',
+      explanation: item.explanation || '',
+      example_sentence: item.example_cn || item.example_sentence || '',
+      example_pinyin: item.example_pinyin || '',
+      example_vi: item.example_vi || '',
+      hsk_level: item.hsk_level || 1
+    });
+  };
+
+  const handleOpenAdd = () => {
+    setEditingGrammar(null);
+    setModalForm({
+      title: '',
+      structure: '',
+      explanation: '',
+      example_sentence: '',
+      example_pinyin: '',
+      example_vi: '',
+      hsk_level: parseInt(selectedHsk, 10) || 1
+    });
+    setIsAddModalOpen(true);
+  };
+
+  const handleSaveModal = async (e) => {
+    e.preventDefault();
+    if (!modalForm.title.trim() || !modalForm.structure.trim()) {
+      alert('Vui lòng nhập tên điểm ngữ pháp và cấu trúc');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      if (editingGrammar) {
+        // Cập nhật ngữ pháp
+        const res = await api.updateGrammar(editingGrammar.id, modalForm);
+        if (res.success) {
+          setGrammarList(prev => prev.map(g => g.id === editingGrammar.id ? { ...g, ...modalForm, example_cn: modalForm.example_sentence } : g));
+          setFeedbackMsg('Đã cập nhật điểm ngữ pháp thành công!');
+          setTimeout(() => setFeedbackMsg(''), 3000);
+          setEditingGrammar(null);
+        }
+      } else {
+        // Thêm ngữ pháp mới
+        const res = await api.createGrammar(modalForm);
+        if (res.success) {
+          fetchGrammar();
+          setFeedbackMsg('Đã thêm điểm ngữ pháp mới thành công!');
+          setTimeout(() => setFeedbackMsg(''), 3000);
+          setIsAddModalOpen(false);
+        }
+      }
+    } catch (err) {
+      alert(`Lỗi lưu dữ liệu: ${err.message}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteGrammar = async (id, title, e) => {
+    e?.stopPropagation();
+    if (!window.confirm(`Bạn có chắc chắn muốn xóa điểm ngữ pháp '${title}' không?`)) {
+      return;
+    }
+
+    try {
+      const res = await api.deleteGrammar(id);
+      if (res.success) {
+        setGrammarList(prev => prev.filter(g => g.id !== id));
+        setFeedbackMsg(`Đã xóa điểm ngữ pháp '${title}' thành công.`);
+        setTimeout(() => setFeedbackMsg(''), 3000);
+      }
+    } catch (err) {
+      alert(`Không thể xóa ngữ pháp: ${err.message}`);
+    }
+  };
+
   return (
     <div className="space-y-6">
+      {/* Toast Feedback Message */}
+      {feedbackMsg && (
+        <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-2 animate-fadeIn shadow-sm">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <span>{feedbackMsg}</span>
+        </div>
+      )}
+
       {/* Header */}
       <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -50,25 +162,38 @@ export default function GrammarPage() {
             </h2>
           </div>
           <p className="text-xs text-slate-500">
-            Tổng hợp các điểm ngữ pháp trọng điểm từ HSK 1 đến HSK 6 kèm công thức, ví dụ và bài tập thực hành
+            Tổng hợp các điểm ngữ pháp trọng điểm từ HSK 1 đến HSK 6 kèm công thức, ví dụ và chỉnh sửa nhanh
           </p>
         </div>
 
-        {/* Cấp độ HSK */}
-        <div className="flex items-center gap-1.5 overflow-x-auto text-xs font-semibold">
-          {[1, 2, 3, 4, 5, 6].map((lvl) => (
+        {/* Nút Thêm mới (Admin/Giáo viên) & Cấp độ HSK */}
+        <div className="flex flex-wrap items-center gap-2">
+          {(isAdmin || isTeacher) && (
             <button
-              key={lvl}
-              onClick={() => setSelectedHsk(String(lvl))}
-              className={`px-3.5 py-1.5 rounded-xl transition-all ${
-                selectedHsk === String(lvl)
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800'
-              }`}
+              onClick={handleOpenAdd}
+              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all"
             >
-              HSK {lvl}
+              <Plus className="w-4 h-4" />
+              <span>Thêm Ngữ Pháp</span>
             </button>
-          ))}
+          )}
+
+          {/* Cấp độ HSK */}
+          <div className="flex items-center gap-1.5 overflow-x-auto text-xs font-semibold">
+            {[1, 2, 3, 4, 5, 6].map((lvl) => (
+              <button
+                key={lvl}
+                onClick={() => setSelectedHsk(String(lvl))}
+                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer ${
+                  selectedHsk === String(lvl)
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-50'
+                }`}
+              >
+                HSK {lvl}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -109,7 +234,28 @@ export default function GrammarPage() {
                     <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                       HSK {item.hsk_level}
                     </span>
-                    {isExpanded ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
+
+                    {/* Nút Sửa & Xóa (Admin / Giáo viên) */}
+                    {(isAdmin || isTeacher) && (
+                      <div className="flex items-center gap-1 border-l border-slate-200 dark:border-slate-700 pl-2 ml-1" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          onClick={(e) => handleOpenEdit(item, e)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors cursor-pointer"
+                          title="Sửa điểm ngữ pháp"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={(e) => handleDeleteGrammar(item.id, item.title, e)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
+                          title="Xóa điểm ngữ pháp"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    )}
+
+                    {isExpanded ? <ChevronUp className="w-5 h-5 text-slate-400 ml-1" /> : <ChevronDown className="w-5 h-5 text-slate-400 ml-1" />}
                   </div>
                 </div>
 
@@ -130,7 +276,7 @@ export default function GrammarPage() {
                     </div>
 
                     {/* Ví dụ mẫu song ngữ */}
-                    {item.example_cn && (
+                    {(item.example_cn || item.example_sentence) && (
                       <div className="space-y-2">
                         <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
                           Ví Dụ Minh Họa
@@ -138,11 +284,11 @@ export default function GrammarPage() {
                         <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
                           <div className="flex items-center justify-between">
                             <div className="font-chinese text-base font-bold text-slate-800 dark:text-slate-100">
-                              {item.example_cn}
+                              {item.example_cn || item.example_sentence}
                             </div>
                             <button
-                              onClick={() => speakChinese(item.example_cn)}
-                              className="p-1.5 rounded-lg text-slate-400 hover:text-teal-600 hover:bg-teal-50"
+                              onClick={() => speakChinese(item.example_cn || item.example_sentence)}
+                              className="p-1.5 rounded-lg text-slate-400 hover:text-teal-600 hover:bg-teal-50 cursor-pointer"
                               title="Nghe phát âm"
                             >
                               <Volume2 className="w-4 h-4" />
@@ -159,73 +305,6 @@ export default function GrammarPage() {
                         </div>
                       </div>
                     )}
-
-                    {/* Bài tập trắc nghiệm áp dụng */}
-                    {item.practice_questions && item.practice_questions.length > 0 && (
-                      <div className="space-y-3 pt-2">
-                        <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                          Bài Tập Trắc Nghiệm Củng Cố
-                        </div>
-
-                        {item.practice_questions.map((q, qIdx) => {
-                          const key = `${item.id}_${qIdx}`;
-                          const selectedOpt = userAnswers[key];
-                          const isAnswered = !!selectedOpt;
-                          const isCorrect = selectedOpt === q.answer;
-
-                          return (
-                            <div key={qIdx} className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
-                              <div className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                                {qIdx + 1}. {q.question}
-                              </div>
-
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                                {q.options.map((opt, oIdx) => {
-                                  const isThisSelected = selectedOpt === opt;
-                                  let btnClass = 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300';
-                                  if (isAnswered) {
-                                    if (opt === q.answer) {
-                                      btnClass = 'bg-emerald-50 border-emerald-400 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 font-bold';
-                                    } else if (isThisSelected) {
-                                      btnClass = 'bg-rose-50 border-rose-400 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300';
-                                    }
-                                  } else {
-                                    btnClass = 'hover:bg-slate-50 dark:hover:bg-slate-750';
-                                  }
-
-                                  return (
-                                    <button
-                                      key={oIdx}
-                                      onClick={() => handleSelectAnswer(item.id, qIdx, opt)}
-                                      className={`p-3 rounded-xl border text-left font-medium transition-all ${btnClass}`}
-                                    >
-                                      <span className="font-bold mr-2">{String.fromCharCode(65 + oIdx)}.</span>
-                                      {opt}
-                                    </button>
-                                  );
-                                })}
-                              </div>
-
-                              {isAnswered && (
-                                <div className={`p-3 rounded-xl text-xs flex items-start gap-2 ${
-                                  isCorrect ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300' : 'bg-rose-50 text-rose-800 dark:bg-rose-950/30 dark:text-rose-300'
-                                }`}>
-                                  {isCorrect ? <CheckCircle className="w-4 h-4 shrink-0 mt-0.5" /> : <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />}
-                                  <div>
-                                    <div className="font-bold">
-                                      {isCorrect ? 'Chính xác! Làm tốt lắm.' : `Chưa đúng. Đáp án chính xác là: ${q.answer}`}
-                                    </div>
-                                    <div className="mt-0.5 text-slate-600 dark:text-slate-400">
-                                      {q.explanation}
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
                   </div>
                 )}
               </div>
@@ -233,6 +312,143 @@ export default function GrammarPage() {
           })
         )}
       </div>
+
+      {/* MODAL SỬA & THÊM NGỮ PHÁP */}
+      {(editingGrammar || isAddModalOpen) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fadeIn">
+          <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            {/* Modal Header */}
+            <div className="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Edit2 className="w-4 h-4" />
+                <h3 className="font-bold text-sm">
+                  {editingGrammar ? `Sửa: ${editingGrammar.title}` : 'Thêm Điểm Ngữ Pháp Mới'}
+                </h3>
+              </div>
+              <button
+                onClick={() => {
+                  setEditingGrammar(null);
+                  setIsAddModalOpen(false);
+                }}
+                className="p-1 rounded-lg hover:bg-white/20 transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleSaveModal} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+              <div className="grid grid-cols-3 gap-3">
+                <div className="col-span-2">
+                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                    Tên điểm ngữ pháp *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={modalForm.title}
+                    onChange={(e) => setModalForm({ ...modalForm, title: e.target.value })}
+                    placeholder="VD: Câu chữ 把 (bǎ)"
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                    Cấp độ HSK
+                  </label>
+                  <select
+                    value={modalForm.hsk_level}
+                    onChange={(e) => setModalForm({ ...modalForm, hsk_level: parseInt(e.target.value, 10) })}
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  >
+                    {[1, 2, 3, 4, 5, 6].map(lvl => (
+                      <option key={lvl} value={lvl}>HSK {lvl}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                  Cấu trúc / Công thức *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={modalForm.structure}
+                  onChange={(e) => setModalForm({ ...modalForm, structure: e.target.value })}
+                  placeholder="VD: Chủ ngữ + 把 + Tân ngữ + Động từ + Thành phần khác"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                  Giải thích chi tiết
+                </label>
+                <textarea
+                  rows={3}
+                  value={modalForm.explanation}
+                  onChange={(e) => setModalForm({ ...modalForm, explanation: e.target.value })}
+                  placeholder="Giải thích cách dùng, lưu ý khi sử dụng ngữ pháp này..."
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+              </div>
+
+              <div className="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-3">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  Ví dụ minh họa
+                </span>
+                
+                <div>
+                  <label className="block text-xs text-slate-500 mb-1">Câu tiếng Trung</label>
+                  <input
+                    type="text"
+                    value={modalForm.example_sentence}
+                    onChange={(e) => setModalForm({ ...modalForm, example_sentence: e.target.value })}
+                    placeholder="VD: 我把作业做完了。"
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-chinese focus:ring-2 focus:ring-blue-500 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs text-slate-500 mb-1">Dịch nghĩa câu ví dụ</label>
+                  <input
+                    type="text"
+                    value={modalForm.example_vi}
+                    onChange={(e) => setModalForm({ ...modalForm, example_vi: e.target.value })}
+                    placeholder="VD: Tôi đã làm xong bài tập rồi."
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-500 outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="pt-4 flex items-center justify-end gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingGrammar(null);
+                    setIsAddModalOpen(false);
+                  }}
+                  className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                >
+                  Hủy Bỏ
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/20 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                >
+                  <Save className="w-3.5 h-3.5" />
+                  <span>{saving ? 'Đang lưu...' : (editingGrammar ? 'Lưu Thay Đổi' : 'Thêm Ngữ Pháp')}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

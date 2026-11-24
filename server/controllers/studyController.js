@@ -286,3 +286,227 @@ exports.recordProgress = (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+// --- 8. QUẢN LÝ / CHỈNH SỬA NHANH & XÓA DỮ LIỆU HỌC TẬP (ADMIN / GIÁO VIÊN) ---
+
+// Thêm từ vựng mới
+exports.createVocabulary = (req, res) => {
+  try {
+    const { hanzi, pinyin, vietnamese_meaning, example_sentence, example_pinyin, example_vi, hsk_level = 1, category = 'Chung' } = req.body;
+    if (!hanzi || !vietnamese_meaning) {
+      return res.status(400).json({ success: false, message: 'Vui lòng nhập đầy đủ chữ Hán và nghĩa tiếng Việt' });
+    }
+
+    const result = db.prepare(`
+      INSERT INTO vocabulary (hanzi, pinyin, vietnamese_meaning, example_sentence, example_pinyin, example_vi, hsk_level, category, is_custom)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)
+    `).run(hanzi.trim(), (pinyin || '').trim(), vietnamese_meaning.trim(), example_sentence || '', example_pinyin || '', example_vi || '', parseInt(hsk_level, 10), category);
+
+    res.json({
+      success: true,
+      message: 'Thêm từ vựng thành công',
+      data: { id: result.lastInsertRowid, hanzi, pinyin, vietnamese_meaning, hsk_level }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Cập nhật / Sửa nhanh từ vựng
+exports.updateVocabulary = (req, res) => {
+  try {
+    const { id } = req.params;
+    const { hanzi, pinyin, vietnamese_meaning, example_sentence, example_pinyin, example_vi, hsk_level, category } = req.body;
+
+    const existing = db.prepare('SELECT * FROM vocabulary WHERE id = ?').get(id);
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy từ vựng' });
+    }
+
+    db.prepare(`
+      UPDATE vocabulary
+      SET hanzi = ?, pinyin = ?, vietnamese_meaning = ?, example_sentence = ?, example_pinyin = ?, example_vi = ?, hsk_level = ?, category = ?
+      WHERE id = ?
+    `).run(
+      hanzi !== undefined ? hanzi.trim() : existing.hanzi,
+      pinyin !== undefined ? pinyin.trim() : existing.pinyin,
+      vietnamese_meaning !== undefined ? vietnamese_meaning.trim() : existing.vietnamese_meaning,
+      example_sentence !== undefined ? example_sentence : existing.example_sentence,
+      example_pinyin !== undefined ? example_pinyin : existing.example_pinyin,
+      example_vi !== undefined ? example_vi : existing.example_vi,
+      hsk_level !== undefined ? parseInt(hsk_level, 10) : existing.hsk_level,
+      category !== undefined ? category : existing.category,
+      parseInt(id, 10)
+    );
+
+    res.json({ success: true, message: 'Cập nhật từ vựng thành công' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Xóa từ vựng
+exports.deleteVocabulary = (req, res) => {
+  try {
+    const { id } = req.params;
+    const existing = db.prepare('SELECT * FROM vocabulary WHERE id = ?').get(id);
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy từ vựng' });
+    }
+
+    db.prepare('DELETE FROM vocabulary WHERE id = ?').run(parseInt(id, 10));
+    res.json({ success: true, message: `Đã xóa từ vựng '${existing.hanzi}' thành công` });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Thêm ngữ pháp mới
+exports.createGrammar = (req, res) => {
+  try {
+    const { title, structure, explanation, example_sentence, example_pinyin, example_vi, hsk_level = 1 } = req.body;
+    if (!title || !structure) {
+      return res.status(400).json({ success: false, message: 'Vui lòng nhập tên điểm ngữ pháp và cấu trúc' });
+    }
+
+    const result = db.prepare(`
+      INSERT INTO grammar (title, structure, explanation, example_sentence, example_pinyin, example_vi, hsk_level)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `).run(title.trim(), structure.trim(), explanation || '', example_sentence || '', example_pinyin || '', example_vi || '', parseInt(hsk_level, 10));
+
+    res.json({
+      success: true,
+      message: 'Thêm điểm ngữ pháp thành công',
+      data: { id: result.lastInsertRowid, title, structure, hsk_level }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Cập nhật ngữ pháp
+exports.updateGrammar = (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, structure, explanation, example_sentence, example_pinyin, example_vi, hsk_level } = req.body;
+
+    const existing = db.prepare('SELECT * FROM grammar WHERE id = ?').get(id);
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy điểm ngữ pháp' });
+    }
+
+    db.prepare(`
+      UPDATE grammar
+      SET title = ?, structure = ?, explanation = ?, example_sentence = ?, example_pinyin = ?, example_vi = ?, hsk_level = ?
+      WHERE id = ?
+    `).run(
+      title !== undefined ? title.trim() : existing.title,
+      structure !== undefined ? structure.trim() : existing.structure,
+      explanation !== undefined ? explanation : existing.explanation,
+      example_sentence !== undefined ? example_sentence : existing.example_sentence,
+      example_pinyin !== undefined ? example_pinyin : existing.example_pinyin,
+      example_vi !== undefined ? example_vi : existing.example_vi,
+      hsk_level !== undefined ? parseInt(hsk_level, 10) : existing.hsk_level,
+      parseInt(id, 10)
+    );
+
+    res.json({ success: true, message: 'Cập nhật điểm ngữ pháp thành công' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Xóa ngữ pháp
+exports.deleteGrammar = (req, res) => {
+  try {
+    const { id } = req.params;
+    const existing = db.prepare('SELECT * FROM grammar WHERE id = ?').get(id);
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy điểm ngữ pháp' });
+    }
+
+    db.prepare('DELETE FROM grammar WHERE id = ?').run(parseInt(id, 10));
+    res.json({ success: true, message: `Đã xóa điểm ngữ pháp '${existing.title}' thành công` });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Thêm bài luyện nói
+exports.createSpeaking = (req, res) => {
+  try {
+    const { title, prompt_cn, pinyin, vietnamese_meaning, difficulty, hsk_level } = req.body;
+    if (!prompt_cn || !vietnamese_meaning) {
+      return res.status(400).json({ success: false, message: 'Vui lòng điền câu tiếng Trung và nghĩa tiếng Việt' });
+    }
+
+    const result = db.prepare(`
+      INSERT INTO speaking_exercises (title, prompt_cn, pinyin, vietnamese_meaning, difficulty, hsk_level)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).run(
+      title ? title.trim() : 'Luyện nói',
+      prompt_cn.trim(),
+      pinyin ? pinyin.trim() : '',
+      vietnamese_meaning.trim(),
+      difficulty || 'Trung bình',
+      parseInt(hsk_level, 10) || 1
+    );
+
+    res.status(201).json({
+      success: true,
+      message: 'Thêm bài luyện nói thành công',
+      data: { id: result.lastInsertRowid }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Cập nhật bài luyện nói
+exports.updateSpeaking = (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, prompt, prompt_cn, pinyin, vietnamese_meaning, difficulty, hsk_level } = req.body;
+
+    const existing = db.prepare('SELECT * FROM speaking_exercises WHERE id = ?').get(id);
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy bài luyện nói' });
+    }
+
+    const finalPrompt = prompt_cn !== undefined ? prompt_cn : (prompt !== undefined ? prompt : existing.prompt_cn);
+
+    db.prepare(`
+      UPDATE speaking_exercises
+      SET title = ?, prompt_cn = ?, pinyin = ?, vietnamese_meaning = ?, difficulty = ?, hsk_level = ?
+      WHERE id = ?
+    `).run(
+      title !== undefined ? title : existing.title,
+      finalPrompt,
+      pinyin !== undefined ? pinyin : existing.pinyin,
+      vietnamese_meaning !== undefined ? vietnamese_meaning : existing.vietnamese_meaning,
+      difficulty !== undefined ? difficulty : (existing.difficulty || 'Trung bình'),
+      hsk_level !== undefined ? parseInt(hsk_level, 10) : existing.hsk_level,
+      parseInt(id, 10)
+    );
+
+    res.json({ success: true, message: 'Cập nhật bài luyện nói thành công' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Xóa bài luyện nói
+exports.deleteSpeaking = (req, res) => {
+  try {
+    const { id } = req.params;
+    const existing = db.prepare('SELECT * FROM speaking_exercises WHERE id = ?').get(id);
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy bài luyện nói' });
+    }
+
+    db.prepare('DELETE FROM speaking_exercises WHERE id = ?').run(parseInt(id, 10));
+    res.json({ success: true, message: 'Đã xóa bài luyện nói thành công' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

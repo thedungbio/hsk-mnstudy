@@ -129,17 +129,25 @@ exports.updatePreviewData = (req, res) => {
 exports.confirmImport = (req, res) => {
   try {
     const { documentId } = req.params;
-    const { target_hsk_level, override_duplicates } = req.body;
+    const { target_hsk_level, override_duplicates, structured_json } = req.body;
 
     const imported = db.prepare('SELECT * FROM imported_data WHERE document_id = ? AND status = "preview"').get(documentId);
     if (!imported) {
       return res.status(404).json({ success: false, message: 'Không tìm thấy dữ liệu preview hợp lệ để duyệt' });
     }
 
-    const data = JSON.parse(imported.structured_json);
+    let data;
+    if (structured_json) {
+      data = structured_json;
+      db.prepare('UPDATE imported_data SET structured_json = ? WHERE document_id = ?').run(JSON.stringify(structured_json), documentId);
+    } else {
+      data = JSON.parse(imported.structured_json);
+    }
+
     let addedVocab = 0;
     let skippedVocab = 0;
     let addedQuestions = 0;
+    let addedGrammar = 0;
 
     const checkVocab = db.prepare('SELECT id FROM vocabulary WHERE hanzi = ?');
     const insertVocab = db.prepare(`
@@ -176,6 +184,28 @@ exports.confirmImport = (req, res) => {
       runVocabInsert(data.vocabulary);
     }
 
+    // Lưu ngữ pháp nếu có
+    if (Array.isArray(data.grammar) && data.grammar.length > 0) {
+      const hsk = target_hsk_level ? parseInt(target_hsk_level, 10) : 1;
+      const insertGrammar = db.prepare(`
+        INSERT INTO grammar (title, structure, explanation, example_sentence, example_pinyin, example_vi, hsk_level)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `);
+      for (const g of data.grammar) {
+        if (!g.title) continue;
+        insertGrammar.run(
+          g.title.trim(),
+          g.structure || '',
+          g.explanation || '',
+          g.example_sentence || '',
+          g.example_pinyin || '',
+          g.example_vi || '',
+          g.hsk_level ? parseInt(g.hsk_level, 10) : hsk
+        );
+        addedGrammar++;
+      }
+    }
+
     // Lưu đề thi nếu có câu hỏi
     if (Array.isArray(data.questions) && data.questions.length > 0) {
       const hsk = target_hsk_level ? parseInt(target_hsk_level, 10) : 1;
@@ -210,13 +240,13 @@ exports.confirmImport = (req, res) => {
       VALUES (?, 'CONFIRM_IMPORT', 'imported_data', ?)
     `).run(
       req.user ? req.user.id : null,
-      JSON.stringify({ documentId, addedVocab, skippedVocab, addedQuestions })
+      JSON.stringify({ documentId, addedVocab, skippedVocab, addedQuestions, addedGrammar })
     );
 
     res.json({
       success: true,
-      message: `Nhập dữ liệu thành công! Đã thêm ${addedVocab} từ vựng (${skippedVocab} trùng lặp), ${addedQuestions} câu hỏi vào hệ thống.`,
-      stats: { addedVocab, skippedVocab, addedQuestions }
+      message: `Nhập dữ liệu thành công! Đã thêm ${addedVocab} từ vựng (${skippedVocab} trùng lặp), ${addedGrammar} ngữ pháp, ${addedQuestions} câu hỏi vào hệ thống.`,
+      stats: { addedVocab, skippedVocab, addedGrammar, addedQuestions }
     });
   } catch (error) {
     console.error('Lỗi xác nhận nhập tài liệu:', error);

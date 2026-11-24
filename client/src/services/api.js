@@ -63,12 +63,24 @@ export const api = {
 
   // Study
   getVocabulary: (params = '') => request(`/study/vocabulary${params}`),
+  createVocabulary: (data) => request('/study/vocabulary', { method: 'POST', body: JSON.stringify(data) }),
+  updateVocabulary: (id, data) => request(`/study/vocabulary/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteVocabulary: (id) => request(`/study/vocabulary/${id}`, { method: 'DELETE' }),
   toggleStarVocab: (vocabularyId) => request('/study/vocabulary/star', { method: 'POST', body: JSON.stringify({ vocabularyId }) }),
   getStarredVocab: () => request('/study/vocabulary/starred'),
+
   getGrammar: (params = '') => request(`/study/grammar${params}`),
+  createGrammar: (data) => request('/study/grammar', { method: 'POST', body: JSON.stringify(data) }),
+  updateGrammar: (id, data) => request(`/study/grammar/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteGrammar: (id) => request(`/study/grammar/${id}`, { method: 'DELETE' }),
+
   getListening: (params = '') => request(`/study/listening${params}`),
   getListeningDetail: (id) => request(`/study/listening/${id}`),
+
   getSpeaking: (params = '') => request(`/study/speaking${params}`),
+  createSpeaking: (data) => request('/study/speaking', { method: 'POST', body: JSON.stringify(data) }),
+  updateSpeaking: (id, data) => request(`/study/speaking/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteSpeaking: (id) => request(`/study/speaking/${id}`, { method: 'DELETE' }),
   getReading: (params = '') => request(`/study/reading${params}`),
   getReadingDetail: (id) => request(`/study/reading/${id}`),
   getWriting: (params = '') => request(`/study/writing${params}`),

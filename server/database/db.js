@@ -255,6 +255,19 @@ const db = {
                 }
                 target.updated_at = new Date().toISOString();
                 changes = 1;
+              } else {
+                // Bộ cập nhật cột đa năng cho vocabulary, grammar, speaking, etc.
+                const setClauseMatch = trimmed.match(/SET\s+(.+)\s+WHERE\s+id\s*=\s*\?/i);
+                if (setClauseMatch) {
+                  const cols = setClauseMatch[1].split(',').map(s => s.trim().split('=')[0].trim());
+                  cols.forEach((col, idx) => {
+                    if (params[idx] !== undefined) {
+                      target[col] = params[idx];
+                    }
+                  });
+                  target.updated_at = new Date().toISOString();
+                  changes = 1;
+                }
               }
             }
           } else if (/WHERE\s+document_id\s*=\s*\?/i.test(trimmed)) {
@@ -316,6 +329,9 @@ const db = {
                 console.warn(`[SECURITY] Thao tác xóa Quản trị viên chính (id: ${idVal}, username: ${target.username}) bị chặn vĩnh viễn!`);
                 return { changes: 0 };
               }
+            }
+            if (tableName === 'vocabulary' && tables.user_starred_vocabulary) {
+              tables.user_starred_vocabulary = tables.user_starred_vocabulary.filter(s => s.vocabulary_id !== idVal);
             }
             const initLen = tables[tableName].length;
             tables[tableName] = tables[tableName].filter(r => r.id !== idVal);
@@ -383,6 +399,16 @@ const db = {
           const eVal = (match && match[1]) ? match[1] : params[0];
           return tables.users.find(u => u.email === eVal) || null;
         }
+        // Generic single record by id (vocabulary, grammar, speaking_exercises, etc.)
+        const genericIdMatch = trimmed.match(/FROM\s+([a-zA-Z0-9_]+)\s+WHERE\s+id\s*=\s*(\d+|\?)/i);
+        if (genericIdMatch) {
+          const tName = genericIdMatch[1].toLowerCase();
+          const targetId = genericIdMatch[2] !== '?' ? parseInt(genericIdMatch[2], 10) : parseInt(params[0], 10);
+          if (tables[tName]) {
+            return tables[tName].find(item => item.id === targetId) || null;
+          }
+        }
+
         if (/FROM\s+vocabulary\s+WHERE\s+hanzi\s*=\s*\?/i.test(trimmed)) {
           return tables.vocabulary.find(v => v.hanzi === params[0]) || null;
         }
@@ -411,9 +437,6 @@ const db = {
           const uid = parseInt(params[0], 10);
           const vid = parseInt(params[1], 10);
           return tables.user_starred_vocabulary.find(s => s.user_id === uid && s.vocabulary_id === vid) || null;
-        }
-        if (/FROM\s+grammar\s+WHERE/i.test(trimmed)) {
-          return tables.grammar[0] || null;
         }
 
         return null;
