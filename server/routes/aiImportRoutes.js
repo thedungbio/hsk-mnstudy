@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const config = require('../config/config');
 const aiImportController = require('../controllers/aiImportController');
 const { authenticateToken, requireRole } = require('../middleware/authMiddleware');
@@ -9,6 +10,9 @@ const { authenticateToken, requireRole } = require('../middleware/authMiddleware
 // Cấu hình lưu file với kiểm tra định dạng
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    if (!fs.existsSync(config.UPLOAD_DIR)) {
+      fs.mkdirSync(config.UPLOAD_DIR, { recursive: true });
+    }
     cb(null, config.UPLOAD_DIR);
   },
   filename: (req, file, cb) => {

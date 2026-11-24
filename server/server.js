@@ -18,6 +18,11 @@ app.use(cors({
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 
+// Ensure uploads directory exists
+if (!fs.existsSync(config.UPLOAD_DIR)) {
+  fs.mkdirSync(config.UPLOAD_DIR, { recursive: true });
+}
+
 // Static uploads directory
 app.use('/uploads', express.static(config.UPLOAD_DIR));
 

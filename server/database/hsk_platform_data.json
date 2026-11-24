@@ -15,12 +15,12 @@
       "id": 7,
       "created_at": "2026-11-24T01:18:39.443Z",
       "username": "admin_hsk",
-      "password_hash": "$2a$10$tYd8ZPfw/OYHswAjLTMNYOSj.RFoy7ZAZJOAoLAEihdFYIaicQWTS",
+      "password_hash": "$2a$10$1QRZKHCVIkDwnergfEINPOow12W455kCZ9sz64NQFlnw2mSQRMXRW",
       "full_name": "Quản Trị Viên Trưởng",
       "email": "nguyenthhedung2009gmail.com",
       "role": "admin",
       "status": "active",
-      "updated_at": "2026-11-24T06:29:20.654Z"
+      "updated_at": "2026-11-24T06:35:20.705Z"
     },
     {
       "id": 13,
@@ -37,23 +37,23 @@
       "id": 18,
       "created_at": "2026-11-24T02:03:03.795Z",
       "username": "hocsinh",
-      "password_hash": "$2a$10$rvf2YGojxi1Vg5FCviCbuuhFtfAgJS3mFwyuQ.a6WuIlkOtgatdoG",
+      "password_hash": "$2a$10$qhAMQ/QeJK1WsVgBuOF2Q.bFfRluYQJTJVwCkiE3UrzH3iMnJOr.m",
       "full_name": "Học Sinh",
       "email": "linhban300@gmail.com",
       "role": "student",
       "status": "active",
-      "updated_at": "2026-11-24T06:29:20.740Z"
+      "updated_at": "2026-11-24T06:35:20.785Z"
     },
     {
       "id": 19,
       "created_at": "2026-11-24T02:31:03.796Z",
       "username": "giaovien",
-      "password_hash": "$2a$10$JMR1gybIuBXUpkjGdgMPbemXDLH9U.lmHX5sWjAPtgWpXEgmbzVba",
+      "password_hash": "$2a$10$XWWZW6djtOpuqspMS0JcZeTG7QP6JRl.qdkYPm0oH2KLMa0R7GRxS",
       "full_name": "giáo viên",
       "email": "anhlaem@gmail.com",
       "role": "teacher",
       "status": "active",
-      "updated_at": "2026-11-24T06:29:20.823Z"
+      "updated_at": "2026-11-24T06:35:20.866Z"
     },
     {
       "id": 20,
@@ -5101,6 +5101,114 @@
     {
       "id": 419,
       "created_at": "2026-11-24T06:29:20.823Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 420,
+      "created_at": "2026-11-24T06:29:51.106Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 421,
+      "created_at": "2026-11-24T06:30:20.930Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 422,
+      "created_at": "2026-11-24T06:30:50.831Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 423,
+      "created_at": "2026-11-24T06:31:21.110Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 424,
+      "created_at": "2026-11-24T06:31:50.836Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 425,
+      "created_at": "2026-11-24T06:32:21.245Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 426,
+      "created_at": "2026-11-24T06:32:50.852Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 427,
+      "created_at": "2026-11-24T06:33:20.862Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 428,
+      "created_at": "2026-11-24T06:33:50.857Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 429,
+      "created_at": "2026-11-24T06:34:20.851Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 430,
+      "created_at": "2026-11-24T06:34:50.860Z",
+      "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
+      "records_synced": 3,
+      "status": "success",
+      "details": "{\"source\":\"Google Sheet ID: 1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"sheetId\":\"1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4\",\"total\":3,\"created\":0,\"updated\":3,\"locked\":0,\"adminProtectedCount\":0,\"adminNotes\":[]}",
+      "performed_by": null
+    },
+    {
+      "id": 431,
+      "created_at": "2026-11-24T06:35:20.866Z",
       "sheet_id": "1qem8T4Ll-Fu2EjATnMZFWw_SMD_jjBP2ZRscDDB3ZD4",
       "records_synced": 3,
       "status": "success",
