@@ -44,7 +44,7 @@ export default function WritingPage() {
 
   const currentEx = exercises[currentIdx];
 
-  // Canvas drawing logic
+  // Canvas drawing logic với hỗ trợ cả Chuột và Màn hình Cảm ứng (Touchscreen/Mobile)
   useEffect(() => {
     if (activeTab === 'stroke' && canvasRef.current) {
       const canvas = canvasRef.current;
@@ -56,22 +56,48 @@ export default function WritingPage() {
     }
   }, [activeTab, currentIdx]);
 
+  const getCoordinates = (e) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return { x: 0, y: 0 };
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+
+    if (e.touches && e.touches.length > 0) {
+      return {
+        x: (e.touches[0].clientX - rect.left) * scaleX,
+        y: (e.touches[0].clientY - rect.top) * scaleY
+      };
+    }
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY
+    };
+  };
+
   const startDrawing = (e) => {
+    if (e.cancelable && e.type.startsWith('touch')) {
+      e.preventDefault();
+    }
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
+    const coords = getCoordinates(e);
     const ctx = canvas.getContext('2d');
     ctx.beginPath();
-    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.moveTo(coords.x, coords.y);
     setIsDrawing(true);
   };
 
   const draw = (e) => {
     if (!isDrawing) return;
+    if (e.cancelable && e.type.startsWith('touch')) {
+      e.preventDefault();
+    }
     const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
+    if (!canvas) return;
+    const coords = getCoordinates(e);
     const ctx = canvas.getContext('2d');
-    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.lineTo(coords.x, coords.y);
     ctx.stroke();
   };
 
@@ -316,13 +342,16 @@ export default function WritingPage() {
               </span>
               <canvas
                 ref={canvasRef}
-                width={200}
-                height={200}
+                width={240}
+                height={240}
                 onMouseDown={startDrawing}
                 onMouseMove={draw}
                 onMouseUp={stopDrawing}
                 onMouseLeave={stopDrawing}
-                className="w-48 h-48 rounded-3xl border-2 border-teal-500 bg-white dark:bg-slate-900 shadow-inner cursor-crosshair"
+                onTouchStart={startDrawing}
+                onTouchMove={draw}
+                onTouchEnd={stopDrawing}
+                className="w-48 h-48 sm:w-56 sm:h-56 rounded-3xl border-2 border-teal-500 bg-white dark:bg-slate-900 shadow-inner cursor-crosshair touch-none select-none"
               />
             </div>
           </div>
